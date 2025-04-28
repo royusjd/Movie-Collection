@@ -9,7 +9,7 @@ import database from "./database.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -22,11 +22,14 @@ const authMiddleware = (req, res, next) => {
 	}
 
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const decoded = jwt.verify(
+			token.replace("Bearer ", ""),
+			process.env.JWT_SECRET
+		);
 		req.user = decoded.userId;
 		next();
 	} catch (error) {
-		console.error(error);
+		console.error("Token error:", error);
 		res.status(401).json({ message: "Token is not valid" });
 	}
 };
@@ -55,9 +58,9 @@ app.post("/movies", authMiddleware, (req, res) => {
 		req.body;
 
 	const sql = `
-		INSERT INTO movie (title, description, release_year, rating, director_id, image_url)
-		VALUES (?, ?, ?, ?, ?, ?)
-	`;
+        INSERT INTO movie (title, description, release_year, rating, director_id, image_url)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
 
 	const values = [
 		title,
@@ -86,7 +89,10 @@ app.put("/movies/:id", authMiddleware, (req, res) => {
 	const { title, description, release_year, rating, director_id, image_url } =
 		req.body;
 
-	const query = `UPDATE movie SET title = ?, description = ?, release_year = ?, rating = ?, director_id = ?, image_url = ? WHERE id = ?`;
+	const query = `
+        UPDATE movie SET title = ?, description = ?, release_year = ?, rating = ?, director_id = ?, image_url = ?
+        WHERE id = ?
+    `;
 
 	database.query(
 		query,
