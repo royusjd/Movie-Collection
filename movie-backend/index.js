@@ -14,6 +14,23 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
+const authMiddleware = (req, res, next) => {
+	const token = req.header("Authorization");
+
+	if (!token) {
+		return res.status(401).json({ message: "No token, authorization denied" });
+	}
+
+	try {
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		req.user = decoded.userId;
+		next();
+	} catch (error) {
+		console.error(error);
+		res.status(401).json({ message: "Token is not valid" });
+	}
+};
+
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
@@ -33,7 +50,7 @@ app.get("/movies", (req, res) => {
 	});
 });
 
-app.post("/movies", (req, res) => {
+app.post("/movies", authMiddleware, (req, res) => {
 	const { title, description, release_year, rating, director_id, image_url } =
 		req.body;
 
@@ -64,7 +81,7 @@ app.post("/movies", (req, res) => {
 	});
 });
 
-app.put("/movies/:id", (req, res) => {
+app.put("/movies/:id", authMiddleware, (req, res) => {
 	const movieId = req.params.id;
 	const { title, description, release_year, rating, director_id, image_url } =
 		req.body;
@@ -89,7 +106,7 @@ app.put("/movies/:id", (req, res) => {
 	);
 });
 
-app.delete("/movies/:id", (req, res) => {
+app.delete("/movies/:id", authMiddleware, (req, res) => {
 	const movieId = req.params.id;
 
 	const query = `DELETE FROM movie WHERE id = ?`;
