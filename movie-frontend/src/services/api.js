@@ -10,8 +10,16 @@ const api = axios.create({
 	},
 });
 
-export const registerUser = (userData) => {
-	return api.post("/register", userData);
+export const registerUser = async (email, password) => {
+	try {
+		const response = await axios.post("http://localhost:3001/register", {
+			email,
+			password,
+		});
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
 };
 
 export const loginUser = (email, password) =>

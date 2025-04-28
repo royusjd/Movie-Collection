@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getMovies } from "../services/api";
 
 const Home = () => {
@@ -23,7 +24,19 @@ const Home = () => {
 			<ul>
 				{movies.map((movie) => (
 					<li key={movie.id}>
-						{movie.title} - {movie.release_year}
+						<Link
+							to={`/movie/${movie.id}`}
+							className="movie-card"
+						>
+							<img
+								src={movie.image_url}
+								alt={movie.title}
+							/>
+							<div className="movie-details">
+								<h3>{movie.title}</h3>
+								<p>{movie.release_year}</p>
+							</div>
+						</Link>
 					</li>
 				))}
 			</ul>
