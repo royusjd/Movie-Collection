@@ -29,9 +29,8 @@ const Login = () => {
 	};
 
 	return (
-		<div>
+		<div className="login-register">
 			<h1>Login</h1>
-			{error && <p style={{ color: "red" }}>{error}</p>}
 			<form onSubmit={handleSubmit}>
 				<input
 					type="email"
@@ -51,6 +50,7 @@ const Login = () => {
 				/>
 				<button type="submit">Login</button>
 			</form>
+			{error && <p style={{ color: "red" }}>{error}</p>}
 		</div>
 	);
 };

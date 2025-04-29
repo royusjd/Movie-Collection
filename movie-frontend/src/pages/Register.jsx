@@ -32,9 +32,8 @@ const Register = () => {
 	};
 
 	return (
-		<div>
+		<div className="login-register">
 			<h1>Register</h1>
-			{error && <p style={{ color: "red" }}>{error}</p>}
 			<form onSubmit={handleSubmit}>
 				<input
 					type="email"
@@ -62,6 +61,7 @@ const Register = () => {
 				/>
 				<button type="submit">Register</button>
 			</form>
+			{error && <p style={{ color: "red" }}>{error}</p>}
 		</div>
 	);
 };
