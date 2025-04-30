@@ -20,7 +20,7 @@ const Header = () => {
 							<Link to="/add-movie">Add Movie</Link>
 						</li>
 						<li>
-							<button onClick={handleLogout}>Logout</button>
+							<Link onClick={handleLogout}>Logout</Link>
 						</li>
 					</>
 				) : (

@@ -145,7 +145,7 @@ app.post(
 			return res.status(400).json({ errors: errors.array() });
 		}
 
-		const { email, password } = req.body;
+		const { username, email, password } = req.body;
 
 		try {
 			const [userExists] = await database
@@ -160,10 +160,10 @@ app.post(
 
 			const result = await database
 				.promise()
-				.query("INSERT INTO users (email, password) VALUES (?, ?)", [
-					email,
-					hashedPassword,
-				]);
+				.query(
+					"INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+					[username, email, hashedPassword]
+				);
 
 			res.status(201).json({ message: "User registered successfully." });
 		} catch (error) {
